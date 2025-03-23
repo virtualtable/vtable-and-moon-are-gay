@@ -15,11 +15,17 @@ const hashPassword = (password) => {
 
 const upload = multer({
     dest: 'uploads/',
-    fileFilter: (req, file, cb) => {
-        cb(null, true);
-    },
+    storage: multer.diskStorage({
+        destination: 'uploads/',
+        filename: (req, file, cb) => {
+            const ext = path.extname(file.originalname);
+            cb(null, Date.now() + ext);
+        }
+    }),
 });
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true })); 
 app.use(express.static('public'));
 
 app.post('/api/upload', upload.single('file'), (req, res) => {
