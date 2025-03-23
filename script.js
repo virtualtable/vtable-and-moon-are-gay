@@ -10,7 +10,7 @@ async function uploadFile() {
 
     const formData = new FormData();
     formData.append('file', fileInput.files[0]);
-    formData.append('password', password);
+    formData.append('password', password); 
 
     try {
         const response = await fetch('/api/upload', {
