@@ -23,10 +23,12 @@ const upload = multer({
 app.use(express.static('public'));
 
 app.post('/api/upload', upload.single('file'), (req, res) => {
-    const { password } = req.body;
-    const { sha256Hash, md5Hash } = hashPassword(password);
-    
-    if (sha256Hash !== hashPassword(PASSWORD).sha256Hash || md5Hash !== hashPassword(PASSWORD).md5Hash) {
+    if (!req.body.password) return res.status(400).json({ error: 'Password required' });
+
+    const { sha256Hash, md5Hash } = hashPassword(req.body.password);
+    const { sha256Hash: correctSHA, md5Hash: correctMD5 } = hashPassword(PASSWORD);
+
+    if (sha256Hash !== correctSHA || md5Hash !== correctMD5) {
         return res.status(403).json({ error: 'Invalid password' });
     }
 
