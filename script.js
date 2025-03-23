@@ -1,6 +1,19 @@
+const CORRECT_PASSWORD = "hawktuah1hack";
+
+function checkPassword() {
+    const passwordInput = document.getElementById("passwordInput").value;
+    const passwordMessage = document.getElementById("passwordMessage");
+    
+    if (passwordInput === CORRECT_PASSWORD) {
+        document.getElementById("passwordPrompt").style.display = "none";
+        document.getElementById("mainContent").classList.remove("hidden");
+    } else {
+        passwordMessage.textContent = "Incorrect password. Try again.";
+    }
+}
+
 async function uploadFile() {
     const fileInput = document.getElementById('fileInput');
-    const passwordInput = document.getElementById('passwordInput');
     const message = document.getElementById('message');
 
     if (!fileInput.files.length) {
@@ -10,15 +23,17 @@ async function uploadFile() {
 
     const formData = new FormData();
     formData.append('file', fileInput.files[0]);
-    formData.append('password', passwordInput.value);
 
     try {
         const response = await fetch('/api/upload', {
             method: 'POST',
             body: formData
         });
+
         const result = await response.json();
-        message.textContent = response.ok ? `Upload successful: ${result.url}` : 'Upload failed';
+        message.innerHTML = response.ok 
+            ? `Upload successful: <a href="${result.url}" target="_blank">${result.url}</a>` 
+            : 'Upload failed';
     } catch (error) {
         message.textContent = 'Upload failed';
     }
